@@ -1,0 +1,208 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>{{.title}}</title>
+    <!-- Bootstrap core CSS-->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .modal_content {
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .modal_content>div {
+            margin-bottom: 20px;
+        }
+
+        .modal_content>h5:first-child {
+            margin: 30px 0px;
+        }
+
+        #dialog label {
+            color: #666;
+        }
+
+        #cookies,
+        #spuId,
+        #notice,
+        #noticeToken {
+            display: block;
+            width: 100%;
+            height: 70px;
+            background: none;
+            padding-top: 30px;
+            border: 0;
+            outline: none;
+            text-align: center;
+            margin-top: -30px;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, .2);
+            border-radius: 0;
+        }
+
+        .notice {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            height: 70px;
+            background: none;
+            padding-top: 30px;
+            margin-top: -30px;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, .2);
+            border-radius: 0;
+        }
+
+        #notice,
+        #code2 {
+            width: calc(100% - 90px);
+            height: 55px;
+            background: none;
+            padding-top: 20px;
+            border: 0;
+            outline: none;
+            text-align: center;
+            margin-top: -20px;
+            font-size: 16px;
+        }
+
+        #btnSendnotice,
+        #btnSendCode2 {
+            width: 250px;
+            height: 30px;
+            padding: 0 5px;
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+            background: transparent;
+            border-radius: 30px;
+            color: #a07941;
+            border-color: #a07941;
+
+        }
+
+        ::-webkit-input-placeholder {
+            /* WebKit browsers */
+            font-size: 14px;
+            color: rgba(0, 0, 0, .4);
+        }
+
+        :-moz-placeholder {
+            /* Mozilla Firefox 4 to 18 */
+            font-size: 14px;
+            color: rgba(0, 0, 0, .4);
+        }
+
+        ::-moz-placeholder {
+            /* Mozilla Firefox 19+ */
+            font-size: 14px;
+            color: rgba(0, 0, 0, .4);
+        }
+
+        :-ms-input-placeholder {
+            /* Internet Explorer 10+ */
+            font-size: 14px;
+            color: rgba(0, 0, 0, .4);
+        }
+
+        .next {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .next button {
+            width: 100%;
+            height: 45px;
+            padding: 0;
+            margin: 0;
+            background: #007BFF;
+            color: #fff;
+            border: 0;
+            outline: none;
+            border-radius: 3px;
+        }
+
+        #vipList {
+            width: 100%;
+            height: 685px;
+        }
+    </style>
+</head>
+
+<body style="">
+
+    <div class="modal_content">
+        <h5>绑定用户信息！</h5>
+        <div>
+            <label for="cookies">Cookie：</label><br>
+            <input id="cookies" type="text" autocomplete="off" placeholder="请输入Cookie">
+        </div>
+        <div>
+            <label for="notice">通知渠道：</label><br>
+            <select name="notice" id="notice">
+                <option value="close">无</option>
+                <option value="WeChat">企业微信</option>
+            </select>
+        </div>
+        <div>
+            <label for="notice">通知Token：</label><br>
+            <input id="noticeToken" type="text" autocomplete="off" placeholder="请输入通知的Token(如果不需要通知就留空)">
+        </div>
+        <div class="next">
+            <button onclick="binding()">提交</button>
+        </div>
+
+
+    </div>
+    <script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script src="https://s1.pstatp.com/cdn/expire-1-M/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+
+        /*提交*/
+        function binding() {
+            var cookie = $.trim($('#cookies').val());
+            var notice = $.trim($("#notice").val());
+            var noticeToken  = $.trim($("#noticeToken").val());
+            $.ajax({
+                type: "POST",
+                url: "/push",
+                data:{
+                    "cookie" : cookie,
+                    "notice" : notice,
+                    "noticetoken" : noticeToken
+                },
+                dataType: "JSON",
+                error: function () {
+                    alert('网络错误');
+                },
+                success: function (res) {
+                    alert(res.msg)
+                }
+            })
+        }
+    </script>
+
+
+</body>
+
+</html>
