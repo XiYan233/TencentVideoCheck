@@ -79,7 +79,7 @@ func CronTask() {
 	}
 
 	//自动领取已完成任务产生的V力值
-	checkCron.AddFunc("*/5 * * * * ?", func() {
+	checkCron.AddFunc("0 30 23 * * ?", func() {
 		dsn := Config.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
