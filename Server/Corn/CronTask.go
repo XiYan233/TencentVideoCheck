@@ -136,7 +136,7 @@ func CronTask() {
 		}
 	})
 	//发送通知
-	sendNotice.AddFunc("*/5 * * * * ?", func() {
+	sendNotice.AddFunc("0 35 23 * * ?", func() {
 		//n 运行日志：\n' + resultContent + '\n 会员信息查询日志: \n > ' + vip_info
 		dsn := Config.GetDsn()
 		db, err := sql.Open("mysql", dsn)
