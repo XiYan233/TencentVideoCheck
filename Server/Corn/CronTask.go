@@ -49,11 +49,12 @@ func CronTask() {
 			var check int
 			var download int
 			var giving int
+			var watch int
 			var obtained string
 			var userInfo string
 			var notice string
 			var noticeToken string
-			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &obtained, &userInfo, &notice, &noticeToken)
+			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken)
 			if err != nil {
 				log.Fatalf("遍历数据库出错：", err)
 				return
