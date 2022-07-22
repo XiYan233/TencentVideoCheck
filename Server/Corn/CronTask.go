@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/robfig/cron"
 	"log"
+	"strconv"
 )
 
 func CronTask() {
@@ -20,6 +21,7 @@ func CronTask() {
 
 	refreshCron := cron.New()
 	checkCron := cron.New()
+	sendNotice := cron.New()
 
 	//检查Cookie是否失效
 	err := refreshCron.AddFunc("0 0 12 * * ?", func() {
@@ -133,8 +135,60 @@ func CronTask() {
 			UserInfo(cookie)
 		}
 	})
+	//发送通知
+	sendNotice.AddFunc("*/5 * * * * ?", func() {
+		//n 运行日志：\n' + resultContent + '\n 会员信息查询日志: \n > ' + vip_info
+		dsn := Config.GetDsn()
+		db, err := sql.Open("mysql", dsn)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		err = db.Ping()
+		if err != nil {
+			fmt.Printf("连接数据库出错：%v\n", err)
+			return
+		}
+
+		rows, err := db.Query("SELECT * FROM user")
+		if err != nil {
+			log.Fatalf("查询数据库出错：", err)
+			return
+		}
+
+		for rows.Next() {
+			var cookie string
+			var barrage int
+			var check int
+			var download int
+			var giving int
+			var watch int
+			var obtained string
+			var userInfo string
+			var notice string
+			var noticeToken string
+			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken)
+			if err != nil {
+				log.Fatalf("遍历数据库出错：", err)
+				return
+			}
+			//查询打印结果集
+			//fmt.Println(cookie)
+
+			msg := "<font color=\\\"warning\\\">腾讯视频签到通知</font>\n" + "> 用户信息：" + userInfo + "\n >" + obtained + "\n" +
+				"> 今日共获得" + strconv.Itoa((barrage + check + download + giving + watch)) + "点V力值\n\n > 任务详情：\n" +
+				"发送弹幕任务获得：" + strconv.Itoa(barrage) + "点V力值\n" +
+				"签到任务获得：" + strconv.Itoa(check) + "点V力值\n" +
+				"下载任务获得：" + strconv.Itoa(download) + "点V力值\n" +
+				"赠送任务获得：" + strconv.Itoa(giving) + "点V力值\n" +
+				"观看60分钟任务获得：" + strconv.Itoa(watch) + "点V力值\n"
+			Notice(notice, noticeToken, msg)
+
+		}
+	})
 
 	refreshCron.Start()
 	checkCron.Start()
+	sendNotice.Start()
 	select {}
 }
