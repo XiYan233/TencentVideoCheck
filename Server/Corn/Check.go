@@ -1,7 +1,10 @@
 package Corn
 
 import (
+	"TencentVideoCheck/Server/Config"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -51,17 +54,38 @@ func Check(cookie string) {
 
 	//fmt.Printf("%s\n", bodyText)
 
-	var givingCheckStruct GivingCheckStruct
-	err = json.Unmarshal(bodyText, &givingCheckStruct)
+	var checkStruct CheckStruct
+	err = json.Unmarshal(bodyText, &checkStruct)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if givingCheckStruct.Ret == -2003 {
-		log.Printf("签到未完成，Ret[%v]\n", givingCheckStruct.Ret)
-	} else if givingCheckStruct.Ret == 0 {
-		log.Printf("签到成功，获得了%v点V力值\n", givingCheckStruct.Score)
-	} else if givingCheckStruct.Ret == -2002 {
-		log.Printf("重复领取，Ret[%v]\n", givingCheckStruct.Ret)
+	if checkStruct.Ret == -2003 {
+		log.Printf("签到未完成，Ret[%v]\n", checkStruct.Ret)
+	} else if checkStruct.Ret == 0 {
+		log.Printf("签到成功，获得了%v点V力值\n", checkStruct.Score)
+
+		dsn := Config.GetDsn()
+		db, err := sql.Open("mysql", dsn)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		err = db.Ping()
+		if err != nil {
+			fmt.Printf("连接数据库出错：%v\n", err)
+			return
+		}
+
+		insertDB, err := db.Prepare("UPDATE `user` SET `Check`=? WHERE `Cookie`=?")
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = insertDB.Exec(checkStruct.Score, cookie)
+		if err != nil {
+			fmt.Printf("修改数据出错：%v\n", err)
+		}
+	} else if checkStruct.Ret == -2002 {
+		log.Printf("重复领取，Ret[%v]\n", checkStruct.Ret)
 	}
 }

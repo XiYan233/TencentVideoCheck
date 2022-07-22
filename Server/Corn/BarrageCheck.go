@@ -55,16 +55,16 @@ func BarrageCheck(cookie string) {
 
 	//fmt.Printf("%s\n", bodyText)
 
-	var givingCheckStruct GivingCheckStruct
-	err = json.Unmarshal(bodyText, &givingCheckStruct)
+	var barrageCheckStruct BarrageCheckStruct
+	err = json.Unmarshal(bodyText, &barrageCheckStruct)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if givingCheckStruct.Ret == -2003 {
-		log.Printf("弹幕签到未完成，Ret[%v]\n", givingCheckStruct.Ret)
-	} else if givingCheckStruct.Ret == 0 {
-		log.Printf("弹幕签到成功，获得了%v点V力值\n", givingCheckStruct.Score)
+	if barrageCheckStruct.Ret == -2003 {
+		log.Printf("弹幕签到未完成或重复领取，Ret[%v]\n", barrageCheckStruct.Ret)
+	} else if barrageCheckStruct.Ret == 0 {
+		log.Printf("弹幕签到成功，获得了%v点V力值\n", barrageCheckStruct.Score)
 
 		dsn := Config.GetDsn()
 		db, err := sql.Open("mysql", dsn)
@@ -78,16 +78,14 @@ func BarrageCheck(cookie string) {
 			return
 		}
 
-		insertDB, err := db.Prepare("")
+		insertDB, err := db.Prepare("UPDATE `user` SET `Barrage`=? WHERE `Cookie`=?")
 		if err != nil {
 			fmt.Println(err)
 		}
-		_, err = insertDB.Exec()
+		_, err = insertDB.Exec(barrageCheckStruct.Score, cookie)
 		if err != nil {
-			fmt.Printf("插入数据出错：%v\n", err)
+			fmt.Printf("修改数据出错：%v\n", err)
 		}
 
-	} else if givingCheckStruct.Ret == -2002 {
-		log.Printf("重复领取，Ret[%v]\n", givingCheckStruct.Ret)
 	}
 }

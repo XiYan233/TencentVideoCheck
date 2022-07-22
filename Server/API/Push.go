@@ -22,11 +22,11 @@ func Push(cookie string, notice string, noticeToken string) {
 	}
 
 	//INSERT INTO `user` (`Cookie`, `Barrage`, `Check`, `Download`, `Giving`, `Obtained`, `UserInfo`, `Notice`, `NoticeToken`) VALUES ('1', NULL, NULL, NULL, NULL, NULL, NULL, '2', '2');
-	insertDB, err := db.Prepare("INSERT INTO `user` (`Cookie`, `Barrage`, `Check`, `Download`, `Giving`, `Obtained`, `UserInfo`, `Notice`, `NoticeToken`) VALUES (?, NULL, NULL, NULL, NULL, NULL, NULL, ?, ?);")
+	insertDB, err := db.Prepare("INSERT INTO `user` (`Cookie`, `Barrage`, `Check`, `Download`, `Giving`,`Watch`, `Obtained`, `UserInfo`, `Notice`, `NoticeToken`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")
 	if err != nil {
 		fmt.Println(err)
 	}
-	_, err = insertDB.Exec(cookie, notice, noticeToken)
+	_, err = insertDB.Exec(cookie, 0, 0, 0, 0, 0, "0", "无", notice, noticeToken)
 	if err != nil {
 		fmt.Printf("插入数据出错：%v\n", err)
 	}

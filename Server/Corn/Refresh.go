@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Refresh(cookie string) {
+func Refresh(cookie string) bool {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://access.video.qq.com/user/auth_refresh?vappid=11059694&vsecret=fdf61a6be0aad57132bc5cdf78ac30145b6cd2c1470b0cfe&type=qq&g_tk=&g_vstk=1380355057&g_actk=1469559637&callback=jQuery19103020594156864662_1658304905455&_=1658304905456", nil)
 	if err != nil {
@@ -35,8 +35,11 @@ func Refresh(cookie string) {
 	}
 	//fmt.Printf("%s\n", bodyText)
 	if resp.StatusCode == 200 {
-		log.Printf("Cookie未失效")
+		//log.Printf("Cookie未失效")
+		return true
 	} else if resp.StatusCode == 401 {
-		log.Printf("Cookie已失效")
+		//log.Printf("Cookie已失效")
+		return false
 	}
+	return true
 }

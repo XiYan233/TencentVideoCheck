@@ -2,6 +2,7 @@ package main
 
 import (
 	"TencentVideoCheck/Server/API"
+	"TencentVideoCheck/Server/Corn"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,6 +36,6 @@ func main() {
 			"title": "腾讯视频自动签到",
 		})
 	})
-
+	go Corn.CronTask()
 	api.Run(":8765")
 }

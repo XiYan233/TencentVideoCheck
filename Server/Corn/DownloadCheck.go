@@ -1,7 +1,10 @@
 package Corn
 
 import (
+	"TencentVideoCheck/Server/Config"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -59,10 +62,29 @@ func DownloadCheck(cookie string) {
 	}
 
 	if downCheckStruct.Ret == -2003 {
-		log.Printf("下载签到未完成，Ret[%v]\n", downCheckStruct.Ret)
+		log.Printf("下载签到未完成或重复领取，Ret[%v]\n", downCheckStruct.Ret)
 	} else if downCheckStruct.Ret == 0 {
 		log.Printf("下载签到成功，获得了%v点V力值\n", downCheckStruct.Score)
-	} else if downCheckStruct.Ret == -2002 {
-		log.Printf("重复领取，Ret[%v]\n", downCheckStruct.Ret)
+
+		dsn := Config.GetDsn()
+		db, err := sql.Open("mysql", dsn)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		err = db.Ping()
+		if err != nil {
+			fmt.Printf("连接数据库出错：%v\n", err)
+			return
+		}
+
+		insertDB, err := db.Prepare("UPDATE `user` SET `Download`=? WHERE `Cookie`=?")
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = insertDB.Exec(downCheckStruct.Score, cookie)
+		if err != nil {
+			fmt.Printf("修改数据出错：%v\n", err)
+		}
 	}
 }

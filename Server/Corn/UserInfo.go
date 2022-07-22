@@ -1,10 +1,14 @@
 package Corn
 
 import (
+	"TencentVideoCheck/Server/Config"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -58,5 +62,27 @@ func UserInfo(cookie string) {
 
 	if resp.StatusCode == 200 {
 		log.Printf("会员开通时间%v，到期时间%v，当前会员等级为%v级，总共获得了%v点V力值", userInfoStruct.BeginTime, userInfoStruct.EndTime, userInfoStruct.Level, userInfoStruct.Score)
+
+		userInfo := "会员开通时间" + userInfoStruct.BeginTime + "，到期时间" + userInfoStruct.EndTime + "，当前会员等级为" + strconv.Itoa(userInfoStruct.Level) + "级，总共获得了" + strconv.Itoa(userInfoStruct.Score) + "点V力值"
+		dsn := Config.GetDsn()
+		db, err := sql.Open("mysql", dsn)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		err = db.Ping()
+		if err != nil {
+			fmt.Printf("连接数据库出错：%v\n", err)
+			return
+		}
+
+		insertDB, err := db.Prepare("UPDATE `user` SET `UserInfo`=? WHERE `Cookie`=?")
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = insertDB.Exec(userInfo, cookie)
+		if err != nil {
+			fmt.Printf("修改数据出错：%v\n", err)
+		}
 	}
 }
