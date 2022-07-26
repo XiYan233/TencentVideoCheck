@@ -19,7 +19,7 @@ type UserInfoStruct struct {
 	Score     int    `json:"score"`
 }
 
-func UserInfo(cookie string) {
+func UserInfo(cookie string, vusession string, accessToken string) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://vip.video.qq.com/fcgi-bin/comm_cgi?name=payvip&cmd=1&otype=json&getannual=1&geticon=1&getsvip=1&callback=jQuery191008113049860183752_1658307109042&uin=0&t=1&getadpass=0&g_tk=&g_vstk=212673112&g_actk=1469559637&_=1658307109048", nil)
 	if err != nil {
@@ -28,7 +28,7 @@ func UserInfo(cookie string) {
 	req.Header.Set("authority", "vip.video.qq.com")
 	req.Header.Set("accept", "*/*")
 	req.Header.Set("accept-language", "zh-CN,zh;q=0.9,en;q=0.8")
-	req.Header.Set("cookie", cookie)
+	req.Header.Set("cookie", cookie+";vqq_vusession="+vusession+";"+"vqq_access_token="+accessToken+";")
 	req.Header.Set("referer", "https://film.qq.com/vip/my/")
 	req.Header.Set("sec-ch-ua", `".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"`)
 	req.Header.Set("sec-ch-ua-mobile", "?0")

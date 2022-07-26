@@ -61,7 +61,8 @@ func CronTask() {
 			}
 			//查询打印结果集
 			//fmt.Println(cookie)
-			if Refresh(cookie) {
+			cookieState, _, _ := Refresh(cookie)
+			if cookieState {
 				log.Printf("Cookie未失效")
 			} else {
 				msg := "<font color=\\\"warning\\\">腾讯视频签到通知</font>\n" + "> Cookie状态已失效，请重新提交Cookie"
@@ -123,21 +124,21 @@ func CronTask() {
 			//fmt.Println(cookie)
 
 			//先刷新vusession有效期
-			Refresh(cookie)
+			_, vusession, accessToken := Refresh(cookie)
 			//弹幕签到
-			BarrageCheck(cookie)
+			BarrageCheck(cookie, vusession, accessToken)
 			//签到
-			Check(cookie)
+			Check(cookie, vusession, accessToken)
 			//下载签到
-			DownloadCheck(cookie)
+			DownloadCheck(cookie, vusession, accessToken)
 			//赠送签到
-			GivingCheck(cookie)
+			GivingCheck(cookie, vusession, accessToken)
 			//观看60分钟签到
-			WatchCheck(cookie)
+			WatchCheck(cookie, vusession, accessToken)
 			//本月获得V力值
-			Obtained(cookie)
+			Obtained(cookie, vusession, accessToken)
 			//用户信息
-			UserInfo(cookie)
+			UserInfo(cookie, vusession, accessToken)
 		}
 	})
 	//发送通知

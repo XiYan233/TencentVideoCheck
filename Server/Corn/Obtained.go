@@ -23,7 +23,7 @@ type ObtainedStruct struct {
 	WillExpireUngiveLscore int    `json:"will_expire_ungive_lscore"`
 }
 
-func Obtained(cookie string) {
+func Obtained(cookie string, vusession string, accessToken string) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://vip.video.qq.com/fcgi-bin/comm_cgi?name=spp_vscore_user_mashup&type=2&otype=xjson", nil)
 	if err != nil {
@@ -33,7 +33,7 @@ func Obtained(cookie string) {
 	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 	req.Header.Set("accept-language", "zh-CN,zh;q=0.9,en;q=0.8")
 	req.Header.Set("cache-control", "max-age=0")
-	req.Header.Set("cookie", cookie)
+	req.Header.Set("cookie", cookie+";vqq_vusession="+vusession+";"+"vqq_access_token="+accessToken+";")
 	req.Header.Set("sec-ch-ua", `".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"`)
 	req.Header.Set("sec-ch-ua-mobile", "?0")
 	req.Header.Set("sec-ch-ua-platform", `"Windows"`)

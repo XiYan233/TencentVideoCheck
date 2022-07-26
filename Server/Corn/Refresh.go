@@ -1,13 +1,26 @@
 package Corn
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 )
 
-func Refresh(cookie string) bool {
+type RefreshStruct struct {
+	Errcode         int    `json:"errcode"`
+	Msg             string `json:"msg"`
+	Vuserid         int    `json:"vuserid"`
+	Vusession       string `json:"vusession"`
+	NextRefreshTime int    `json:"next_refresh_time"`
+	AccessToken     string `json:"access_token"`
+	Head            string `json:"head"`
+	Nick            string `json:"nick"`
+}
+
+func Refresh(cookie string) (bool, string, string) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://access.video.qq.com/user/auth_refresh?vappid=11059694&vsecret=fdf61a6be0aad57132bc5cdf78ac30145b6cd2c1470b0cfe&type=qq&g_tk=&g_vstk=1959117529&g_actk=1469559637&callback=jQuery191040005793960664526_1658814553950&_=1658814553951", nil)
 	if err != nil {
@@ -34,6 +47,7 @@ func Refresh(cookie string) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(resp.Cookies())
 
 	//傻逼腾讯返回的不是标准json
 	temp1 := strings.Index(string(bodyText), "{")
@@ -42,12 +56,21 @@ func Refresh(cookie string) bool {
 	bodyText = bodyText[:temp2]
 
 	log.Printf("%s\n", bodyText)
+
+	var refreshStruct RefreshStruct
+	err = json.Unmarshal(bodyText, &refreshStruct)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if resp.StatusCode == 200 {
 		//log.Printf("Cookie未失效")
-		return true
+		log.Printf("Vusession：%v\n", refreshStruct.Vusession)
+		log.Printf("AccessToken：%v\n", refreshStruct.AccessToken)
+		return true, refreshStruct.Vusession, refreshStruct.AccessToken
 	} else if resp.StatusCode == 401 {
 		//log.Printf("Cookie已失效")
-		return false
+		return false, "", ""
 	}
-	return true
+	return true, refreshStruct.Vusession, refreshStruct.AccessToken
 }
