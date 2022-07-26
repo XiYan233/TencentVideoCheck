@@ -122,6 +122,8 @@ func CronTask() {
 			//查询打印结果集
 			//fmt.Println(cookie)
 
+			//先刷新vusession有效期
+			Refresh(cookie)
 			//弹幕签到
 			BarrageCheck(cookie)
 			//签到
