@@ -66,7 +66,7 @@ func CronTask() {
 				log.Printf("Cookie未失效")
 			} else {
 				msg := "<font color=\\\"warning\\\">腾讯视频签到通知</font>\n" + "> Cookie状态已失效，请重新提交Cookie"
-				Notice(notice, noticeToken, msg)
+				Notice(cookie, notice, noticeToken, msg)
 				log.Printf("Cookie已失效,正在删除Cookie")
 				deleteDB, err := db.Prepare("DELETE FROM `user` WHERE `Cookie`=?")
 				if err != nil {

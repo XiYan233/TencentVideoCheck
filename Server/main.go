@@ -2,12 +2,15 @@ package main
 
 import (
 	"TencentVideoCheck/Server/API"
+	"TencentVideoCheck/Server/Config"
 	"TencentVideoCheck/Server/Corn"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	api := gin.Default()
+	fmt.Println(Config.GetDsn())
 	api.POST("/push", func(c *gin.Context) {
 		cookies := c.PostForm("cookie")
 		notice := c.PostForm("notice")

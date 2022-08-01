@@ -1,0 +1,10 @@
+#  数据库用户名
+DBUser: root
+#  数据库密码
+DBPassword:
+#  数据库地址
+DBHost: 127.0.0.1
+#  数据库端口
+DBPort: 3306
+#  数据库名
+DBName: tencentvideocheck
