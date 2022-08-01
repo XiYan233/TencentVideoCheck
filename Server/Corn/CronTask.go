@@ -188,7 +188,7 @@ func CronTask() {
 				"下载任务获得：" + strconv.Itoa(download) + "点V力值\n" +
 				"赠送任务获得：" + strconv.Itoa(giving) + "点V力值\n" +
 				"观看60分钟任务获得：" + strconv.Itoa(watch) + "点V力值\n"
-			Notice(notice, noticeToken, msg)
+			Notice(cookie, notice, noticeToken, msg)
 
 		}
 	})

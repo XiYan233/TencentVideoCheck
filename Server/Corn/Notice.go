@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func Notice(notice string, noticeToken string, msg string) {
+func Notice(cookie string, notice string, noticeToken string, msg string) {
 	if notice == "close" {
 		log.Print("未开启通知\n")
 	} else if notice == "WeChat" {
@@ -34,4 +34,6 @@ func Notice(notice string, noticeToken string, msg string) {
 		}
 		log.Printf("发送企业通知：%s\n", bodyText)
 	}
+	//清除今日签到数据
+	ClearData(cookie)
 }
