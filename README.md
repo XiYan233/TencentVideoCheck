@@ -14,22 +14,26 @@
   # 克隆本项目
     git clone https://github.com/Demontisa/TencentVideoCheck.git
   # 进入项目目录
-    cd TencentVideoCheck/Server
+    cd TencentVideoCheck
 ```
 ## 修改数据库配置
    
    * 导入数据库文件`tencentvideocheck.sql`
-   * 进入`Config`目录下
+   * 进入`config`目录下
    * 修改`conf.yaml`文件内容
 
 ## 编译项目
 ```shell
-   go build main.go
+   # linux
+   bash build.sh
 ```
 
 ## 运行项目
 ```shell
-   ./main
+   # linux-amd64
+   chmod +x TencentVideoCheck-linux-amd64 && ./TencentVideoCheck-linux-amd64
+   # linux-arm64
+   chmod +x TencentVideoCheck-linux-arm64 && ./TencentVideoCheck-linux-arm64
 ```
 
 ## Cookie获取步骤
