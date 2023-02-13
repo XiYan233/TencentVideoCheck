@@ -1,13 +1,13 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"fmt"
 )
 
 func ClearData(cookie string) {
-	dsn := Config.GetDsn()
+	dsn := Setting.GetDsn()
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Println(err)

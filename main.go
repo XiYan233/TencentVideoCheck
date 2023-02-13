@@ -30,7 +30,7 @@ func main() {
 
 	})
 
-	api.LoadHTMLGlob("./templates/*")
+	api.LoadHTMLGlob("./view/*")
 	api.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.tmpl", gin.H{
 			"title": "腾讯视频自动签到",

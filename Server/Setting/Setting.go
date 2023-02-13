@@ -1,4 +1,4 @@
-package Config
+package Setting
 
 import (
 	"gopkg.in/yaml.v3"
@@ -15,7 +15,7 @@ type Conf struct {
 }
 
 func (c *Conf) getConf() *Conf {
-	yamlFile, err := ioutil.ReadFile("./Config/conf.yaml")
+	yamlFile, err := ioutil.ReadFile("./config/conf.yaml")
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}

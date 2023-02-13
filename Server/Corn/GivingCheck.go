@@ -1,7 +1,7 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -65,7 +65,7 @@ func GivingCheck(cookie string, vusession string, accessToken string) {
 	} else if givingCheckStruct.Ret == 0 {
 		log.Printf("赠送签到成功或重复领取，获得了%v点V力值\n", givingCheckStruct.Score)
 
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)

@@ -42,7 +42,8 @@ CREATE TABLE `user` (
   `Obtained` varchar(255) DEFAULT NULL COMMENT '本月获得V力值',
   `UserInfo` varchar(255) DEFAULT NULL COMMENT '用户信息',
   `Notice` varchar(255) DEFAULT NULL COMMENT '通知类型',
-  `NoticeToken` varchar(255) DEFAULT NULL COMMENT '通知Token'
+  `NoticeToken` varchar(255) DEFAULT NULL COMMENT '通知Token',
+  `AddTime` int(11) DEFAULT NULL COMMENT '添加时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 COMMIT;
 

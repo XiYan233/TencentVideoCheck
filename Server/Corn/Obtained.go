@@ -1,7 +1,7 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -63,7 +63,7 @@ func Obtained(cookie string, vusession string, accessToken string) {
 	if resp.StatusCode == 200 {
 		log.Printf("本月已获得%v点V力值，%v", obtainedStruct.LscoreMonth, obtainedStruct.RankDesc)
 		obtained := "本月已获得" + strconv.Itoa(obtainedStruct.LscoreMonth) + "点V力值，" + obtainedStruct.RankDesc
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)

@@ -1,7 +1,7 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -66,7 +66,7 @@ func BarrageCheck(cookie string, vusession string, accessToken string) {
 	} else if barrageCheckStruct.Ret == 0 {
 		log.Printf("弹幕签到成功，获得了%v点V力值\n", barrageCheckStruct.Score)
 
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)

@@ -1,23 +1,25 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"fmt"
 	"github.com/robfig/cron"
 	"log"
 	"strconv"
+	"time"
 )
 
 func CronTask() {
 
-	//*/5 * * * * ? 每5秒执行一次
+	// 每5秒执行一次
+	// */5 * * * * ?
 
-	//每天23：30执行一次
-	//0 30 23 * * ?
+	// 每天23：30执行一次
+	// 0 30 23 * * ?
 
-	//每天中午12：00执行一次
-	//0 0 12 * * ?
+	// 每天中午12：00执行一次
+	// 0 0 12 * * ?
 
 	refreshCron := cron.New()
 	checkCron := cron.New()
@@ -25,7 +27,7 @@ func CronTask() {
 
 	//检查Cookie是否失效
 	err := refreshCron.AddFunc("0 0 12 * * ?", func() {
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)
@@ -54,15 +56,17 @@ func CronTask() {
 			var userInfo string
 			var notice string
 			var noticeToken string
-			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken)
+			var addTime int64
+			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken, &addTime)
 			if err != nil {
 				log.Fatalf("遍历数据库出错：", err)
 				return
 			}
 			//查询打印结果集
 			//fmt.Println(cookie)
-			cookieState, _, _ := Refresh(cookie)
-			if cookieState {
+			_, _, _ = Refresh(cookie)
+			// 2505600 30天
+			if time.Now().Unix()-addTime < 2505600 {
 				log.Printf("Cookie未失效")
 			} else {
 				msg := "<font color=\\\"warning\\\">腾讯视频签到通知</font>\n" + "> Cookie状态已失效，请重新提交Cookie"
@@ -86,7 +90,7 @@ func CronTask() {
 
 	//自动领取已完成任务产生的V力值
 	checkCron.AddFunc("0 30 23 * * ?", func() {
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)
@@ -115,7 +119,8 @@ func CronTask() {
 			var userInfo string
 			var notice string
 			var noticeToken string
-			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken)
+			var addTime int64
+			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken, &addTime)
 			if err != nil {
 				log.Fatalf("遍历数据库出错：", err)
 				return
@@ -144,7 +149,7 @@ func CronTask() {
 	//发送通知
 	sendNotice.AddFunc("0 35 23 * * ?", func() {
 		//n 运行日志：\n' + resultContent + '\n 会员信息查询日志: \n > ' + vip_info
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)
@@ -173,7 +178,8 @@ func CronTask() {
 			var userInfo string
 			var notice string
 			var noticeToken string
-			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken)
+			var addTime int64
+			err = rows.Scan(&cookie, &barrage, &check, &download, &giving, &watch, &obtained, &userInfo, &notice, &noticeToken, &addTime)
 			if err != nil {
 				log.Fatalf("遍历数据库出错：", err)
 				return

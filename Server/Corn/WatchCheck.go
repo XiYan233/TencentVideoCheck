@@ -1,7 +1,7 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -65,7 +65,7 @@ func WatchCheck(cookie string, vusession string, accessToken string) {
 	} else if watchCheckStruct.Ret == 0 {
 		log.Printf("观看60分钟签到成功，获得了%v点V力值\n", watchCheckStruct.Score)
 
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)

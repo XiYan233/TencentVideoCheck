@@ -1,4 +1,4 @@
-package Config
+package Setting
 
 func GetDsn() string {
 	var config Conf

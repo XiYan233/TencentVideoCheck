@@ -1,7 +1,7 @@
 package Corn
 
 import (
-	"TencentVideoCheck/Server/Config"
+	"TencentVideoCheck/Server/Setting"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -64,7 +64,7 @@ func UserInfo(cookie string, vusession string, accessToken string) {
 		log.Printf("会员开通时间%v，到期时间%v，当前会员等级为%v级，总共获得了%v点V力值", userInfoStruct.BeginTime, userInfoStruct.EndTime, userInfoStruct.Level, userInfoStruct.Score)
 
 		userInfo := "会员开通时间" + userInfoStruct.BeginTime + "，到期时间" + userInfoStruct.EndTime + "，当前会员等级为" + strconv.Itoa(userInfoStruct.Level) + "级，总共获得了" + strconv.Itoa(userInfoStruct.Score) + "点V力值"
-		dsn := Config.GetDsn()
+		dsn := Setting.GetDsn()
 		db, err := sql.Open("mysql", dsn)
 		if err != nil {
 			fmt.Println(err)
